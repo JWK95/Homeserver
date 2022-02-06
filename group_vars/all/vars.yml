@@ -71,4 +71,4 @@ samba_shares:
 
 # x735
 
-x735_repo: https://github.com/geekworm-com/x735-v2.5
+x735_repo: https://github.com/geekworm-com/x735-v2.5.git
