@@ -1,0 +1,21 @@
+---
+- name: Format disk
+  filesystem:
+    dev: "{{ disk_name }}"
+    fstype: "{{ disk_fstype }}"
+  when: format_disk | bool
+
+- name: Create disk directory
+  file:
+    path: "{{ disk_path }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+
+- name: Mount disk
+  mount:
+    path: "{{ disk_path }}"
+    src: "{{ disk_name }}"
+    fstype: "{{ disk_fstype }}"
+    state: mounted

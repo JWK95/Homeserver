@@ -1,0 +1,39 @@
+---
+- hosts: all
+  become: yes
+
+  pre_tasks:
+    - name: Update and install essential packages
+      import_tasks: tasks/bootstrap.yml
+
+    - name: Configure SSD
+      import_tasks: tasks/disk.yml
+      when: configure_disk | bool
+
+    - name: Install Docker
+      import_tasks: tasks/docker.yml
+      when: install_docker | bool
+
+    - name: Update SSH Config
+      import_tasks: tasks/security.yml
+
+  roles: 
+    - name: Install and configure Homer
+      role: homer
+      when: install_homer | bool
+
+    - name: Install and configure Jellyfin
+      role: jellyfin
+      when: install_jellyfin | bool
+
+    - name: Install and configure Pi-hole
+      role: pi-hole
+      when: install_pihole | bool
+
+    - name: Install and configure Samba share
+      role: bertvv.samba
+      when: install_samba | bool
+
+    - name: Install x735 script
+      role: x735
+      when: install_x735 | bool

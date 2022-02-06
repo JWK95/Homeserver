@@ -1,0 +1,19 @@
+---
+title: "Pi Dashboard"
+logo: "assets/logo.png"
+
+header: false
+
+footer: ""
+
+services:
+  - name: "Services"
+    icon: "fas fa-concierge-bell"
+    items:
+      - name: "Jellyfin"
+        logo: "assets/jellyfin.png"
+        url: "http://192.168.0.100:8096"
+
+      - name: "Pi-hole"
+        logo: "assets/pihole.png"
+        url: "http://192.168.0.100:80/admin"

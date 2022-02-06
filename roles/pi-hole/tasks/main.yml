@@ -1,0 +1,15 @@
+---
+- name: Check the Pi-hole container is up and running
+  docker_container:
+    name: "Pi-hole"
+    image: "pihole/pihole"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      "WEBPASSWORD": "{{ pihole_webpassword }}"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"

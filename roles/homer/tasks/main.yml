@@ -1,0 +1,24 @@
+---
+- name: Make Homer directory
+  file:
+    path: "{{ docker_directory}}/Homer/"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+
+- name: Copy files to Homer directory
+  copy: 
+    src: "../files/"
+    dest: "{{ docker_directory }}/Homer/"
+
+- name: Check the Homer container is created and running
+  docker_container:
+    name: "Homer"
+    image: "b4bz/homer"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    ports: "8080:8080"
+    volumes: 
+      - "{{ docker_directory }}/Homer/:/www/assets/"

@@ -1,0 +1,30 @@
+---
+- name: Install required packages
+  package: 
+    name:
+      - python3-smbus
+      - python3-pigpio
+      - pigpio
+      - git
+    state: latest
+
+- name: Check for x735 service
+  stat: path=/etc/init.d/x735fan
+  register: x735fan_status
+
+- name: Clone repository
+  git:
+    repo: "{{ x735_repo }}"
+    dest: x735-v2.5
+    force: yes
+  when: not x735fan_status.stat.exists
+
+- name: Install
+  command:
+    cmd: bash ./x735-v2.5/install.sh
+  when: not x735fan_status.stat.exists
+
+- name: Reboot
+  reboot:
+    reboot_timeout: 600 
+  when: not x735fan_status.stat.exists
