@@ -22,12 +22,12 @@ My server currently runs Raspbian 64-bit, however this playbook should be compat
 Before starting ensure you have access to a non-root sudo user and have added your public SSH key to the server.
 If you haven't done this yet, see below:
 
-Generate SSH Key
+Generate SSH Key:
 ```
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/homeserver -C "your_email@example.com"
 ```
 
-Add SSH Key to the server
+Add SSH Key to the server:
 ```
 ssh-copy-id -i ~/.ssh/homeserver username@server
 ```

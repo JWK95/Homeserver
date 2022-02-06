@@ -19,12 +19,21 @@
     force: yes
   when: not x735fan_status.stat.exists
 
+- name: Chmod +x files
+  file:
+    path: "./x735-v2.5/{{ item }}"
+    mode: 0554
+  loop:
+  - install.sh
+  - uninstall.sh
+
 - name: Install
   command:
-    cmd: bash ./x735-v2.5/install.sh
+    chdir: x735-v2.5
+    cmd: bash install.sh
   when: not x735fan_status.stat.exists
 
 - name: Reboot
   reboot:
-    reboot_timeout: 600 
+    reboot_timeout: 600
   when: not x735fan_status.stat.exists

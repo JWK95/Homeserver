@@ -33,7 +33,9 @@ docker_directory: /opt/docker/data
 
 disk_path: /mnt/SSD
 
-disk_name: /dev/sda
+disk: /dev/sda
+
+disk_name: /dev/sda1
 
 disk_fstype: ext4
 
@@ -69,4 +71,4 @@ samba_shares:
 
 # x735
 
-x735_repo: https://github.com/thorkseng/x735-v2.5.git
+x735_repo: https://github.com/geekworm-com/x735-v2.5

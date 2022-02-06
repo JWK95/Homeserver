@@ -1,4 +1,12 @@
 ---
+- name: Create ext4 partition
+  parted:
+    device: "{{ disk }}"
+    number: 1
+    state: present
+    fs_type: "{{ disk_fstype }}"
+  when: format_disk | bool
+  
 - name: Format disk
   filesystem:
     dev: "{{ disk_name }}"
