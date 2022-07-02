@@ -1,4 +1,4 @@
-# HomeServerAutomation
+# Homeserver
 An ansible playbook to deploy and configure my home server.
 
 This playbook assumes a fresh Raspbian 64-bit install, access to a non-root user with sudo privileges and a public SSH key.
