@@ -9,15 +9,18 @@
     state: latest
 
 - name: Check for x735 service
-  stat: path=/etc/init.d/x735fan
+  command: grep -Fq "python /home/pi/x735-v2.5/pwm_fan_control.py" /etc/rc.local
   register: x735fan_status
+  check_mode: no
+  ignore_errors: true
+  changed_when: no
 
 - name: Clone repository
   git:
     repo: "{{ x735_repo }}"
     dest: x735-v2.5
     force: yes
-  when: not x735fan_status.stat.exists
+  when: not x735fan_status.rc == 0
 
 - name: Chmod +x files
   file:
@@ -26,14 +29,15 @@
   loop:
   - install.sh
   - uninstall.sh
+  when: not x735fan_status.rc == 0
 
 - name: Install
   command:
     chdir: x735-v2.5
     cmd: bash install.sh
-  when: not x735fan_status.stat.exists
+  when: not x735fan_status.rc == 0
 
 - name: Reboot
   reboot:
     reboot_timeout: 600
-  when: not x735fan_status.stat.exists
+  when: not x735fan_status.rc == 0

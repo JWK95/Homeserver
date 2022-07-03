@@ -1,0 +1,22 @@
+---
+title: "Pi Dashboard"
+logo: "assets/logo.png"
+
+header: false
+footer: ""
+
+defaults:
+  layout: list
+  colorTheme: dark
+
+services:
+  - name: "Services"
+    icon: "fas fa-concierge-bell"
+    items:
+    {% for service in services %}
+
+      - name: "{{ service.name }}"
+        logo: "assets/{{ service.name | lower }}.png"
+        url: "{{ service.url }}"
+ 
+    {% endfor %}

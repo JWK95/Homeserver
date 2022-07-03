@@ -40,7 +40,7 @@ sudo apt install ansible
 
 Clone the repository:
 ```
-git clone https://github.com/JoeC7756/HomeServerAutomation.git
+git clone https://github.com/JoeC7756/Homeserver.git
 ```
 
 Create and update hosts file using the provided template:
@@ -49,10 +49,17 @@ cp examplehosts hosts
 vim hosts
 ```
 
-Create a host variable file and adjust the values:
+Create a host variable file and adjust the default values:
 ```
 mkdir -p host_vars/HOSTNAME
-vim host_vars/HOSTNAME/vars.yml
+vim host_vars/HOSTNAME/main.yml
+```
+
+Some notable values to change are: 
+```
+local_ip: "127.0.0.1"
+pihole_webpassword: "SuperSecurePiHolePassword"
+samba_password: "SuperSecureSambaPassword"
 ```
 
 Install the dependencies:
@@ -62,6 +69,6 @@ ansible-galaxy install -r requirements.yml
 
 Run the playbook:
 ```
-ansible-playbook run.yml -K (First time)
-ansible-playbook run.yml (Subsequent runs)
+ansible-playbook main.yml -K (First time)
+ansible-playbook main.yml (Subsequent runs)
 ```

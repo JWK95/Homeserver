@@ -1,0 +1,39 @@
+# Don't modify any vars files directly, instead overwrite them using host_vars
+
+run_bootstrap: true
+
+install_services: true
+
+configure_samba: true
+
+# Shared 
+
+username: pi
+
+docker_directory: /opt/docker/data
+
+disk_path: /mnt/SSD
+
+local_ip: "127.0.0.1"
+
+pihole_webpassword: "SuperSecurePiHolePassword"
+
+samba_password: "SuperSecureSambaPassword"
+
+# Samba
+
+samba_users:
+  - name: "{{ username }}"
+    password: "{{ samba_password }}"
+
+samba_shares:
+  - name: Pi
+    guest_ok: no
+    public: no
+    read_only: no
+    writable: yes
+    owner: "{{ username }}"
+    browseable: yes
+    path: "{{ disk_path }}"
+    valid_users: "{{ username }}"
+    write_list: "{{ username }}"

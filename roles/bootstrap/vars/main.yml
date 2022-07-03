@@ -1,0 +1,28 @@
+install_packages: true
+
+install_docker: true
+
+configure_disk: true
+
+packages:
+  - neofetch
+  - vim
+  - speedtest-cli
+  - curl
+  - python3
+
+# Docker
+
+docker_packages: 
+  - docker
+  - docker-compose
+
+# Disk management
+
+disk: /dev/sda
+
+disk_name: /dev/sda1
+
+disk_fstype: ext4
+
+format_disk: false

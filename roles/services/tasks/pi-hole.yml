@@ -1,7 +1,7 @@
 ---
 - name: Check the Pi-hole container is up and running
   docker_container:
-    name: "Pi-hole"
+    name: "pi-hole"
     image: "pihole/pihole"
     pull: true
     state: "started"

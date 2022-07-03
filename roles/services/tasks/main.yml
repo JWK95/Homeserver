@@ -1,0 +1,12 @@
+---
+- include_tasks: homer.yml
+  when: install_homer | bool
+
+- include_tasks: jellyfin.yml
+  when: install_jellyfin | bool
+
+- include_tasks: pi-hole.yml
+  when: install_pihole | bool
+
+- include_tasks: x735.yml 
+  when: install_x735 | bool

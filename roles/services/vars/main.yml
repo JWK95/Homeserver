@@ -1,0 +1,27 @@
+install_homer: true
+
+install_jellyfin: true
+
+install_pihole: true
+
+install_x735: true
+
+# Shared 
+
+jellyfin_port: "8096"
+
+# Homer
+
+services:
+  - name: Jellyfin
+    url: "http://{{ local_ip }}:{{ jellyfin_port }}"
+  - name: Pi-hole
+    url: "http://{{ local_ip }}:80/admin"
+
+# Jellyfin
+
+# Pi-hole
+
+# x735
+
+x735_repo: https://github.com/geekworm-com/x735-v2.5.git

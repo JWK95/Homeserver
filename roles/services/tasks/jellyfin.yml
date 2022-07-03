@@ -7,20 +7,20 @@
     state: directory
     recurse: yes
   loop:
-  - "{{ docker_directory }}/Jellyfin"
-  - "{{ docker_directory }}/Jellyfin/config"
-  - "{{ docker_directory }}/Jellyfin/cache"
+  - "{{ docker_directory }}/jellyfin"
+  - "{{ docker_directory }}/jellyfin/config"
+  - "{{ docker_directory }}/jellyfin/cache"
 
 
 - name: Check the Jellyfin container is created and running
   docker_container:
-    name: "Jellyfin"
+    name: "jellyfin"
     image: "jellyfin/jellyfin"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
-    ports: "8096:8096"
+    ports: "{{ jellyfin_port }}:{{ jellyfin_port }}"
     volumes: 
-      - "{{ docker_directory }}/Jellyfin/config:/config"
-      - "{{ docker_directory }}/Jellyfin/cache:/cache"
-      - "/mnt/SSD/:/media"
+      - "{{ docker_directory }}/jellyfin/config:/config"
+      - "{{ docker_directory }}/jellyfin/cache:/cache"
+      - "{{ disk_path }}:/media"

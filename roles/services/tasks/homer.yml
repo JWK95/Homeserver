@@ -1,0 +1,29 @@
+---
+- name: Make Homer directory
+  file:
+    path: "{{ docker_directory}}/homer/"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+
+- name: Copy config template to Homer directory
+  template:
+    src: ../files/homer/homer-config.yml.j2
+    dest: "{{ docker_directory }}/homer/config.yml"
+
+- name: Copy image assets to Homer directory
+  copy: 
+    src: "../files/homer/assets/"
+    dest: "{{ docker_directory }}/homer/"
+
+- name: Check the Homer container is created and running
+  docker_container:
+    name: "homer"
+    image: "b4bz/homer"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    ports: "8080:8080"
+    volumes: 
+      - "{{ docker_directory }}/homer/:/www/assets/"

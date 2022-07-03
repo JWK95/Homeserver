@@ -1,0 +1,11 @@
+---
+- include_tasks: packages.yml
+  when: install_packages | bool
+
+- include_tasks: docker.yml
+  when: install_docker | bool
+
+- include_tasks: disk.yml
+  when: configure_disk | bool
+
+- include_tasks: security.yml

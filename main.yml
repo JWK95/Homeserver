@@ -1,0 +1,15 @@
+---
+- hosts: homeserver
+  become: true
+  roles: 
+    - name: Bootstrap the Pi
+      role: bootstrap
+      when: run_bootstrap | bool
+
+    - name: Install and configure services
+      role: services
+      when: install_services | bool
+
+    - name: Install and configure the Samba share
+      role: samba
+      when: configure_samba | bool
