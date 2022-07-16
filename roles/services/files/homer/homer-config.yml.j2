@@ -1,8 +1,6 @@
 ---
 title: "Pi Dashboard"
-logo: "assets/logo.png"
-
-connectivityCheck: false
+logo: "assets/favicon.ico"
 
 header: false
 footer: ""
@@ -19,6 +17,6 @@ services:
 
       - name: "{{ service }}"
         logo: "assets/{{ service | lower }}.png"
-        url: "https://{{ service }}.local"
+        url: "https://{{ service | lower }}.local"
  
     {% endfor %}

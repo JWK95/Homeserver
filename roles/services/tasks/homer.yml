@@ -10,12 +10,18 @@
 - name: Copy config template to Homer directory
   template:
     src: ../files/homer/homer-config.yml.j2
+    owner: "{{ username }}"
+    group: "{{ username }}"
     dest: "{{ docker_directory }}/homer/config.yml"
+    recurse: yes
 
 - name: Copy image assets to Homer directory
   copy: 
     src: "../files/homer/assets/"
+    owner: "{{ username }}"
+    group: "{{ username }}"
     dest: "{{ docker_directory }}/homer/"
+    recurse: yes
 
 - name: Check the Homer container is created and running
   docker_container:
