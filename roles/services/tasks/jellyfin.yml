@@ -11,7 +11,6 @@
   - "{{ docker_directory }}/jellyfin/config"
   - "{{ docker_directory }}/jellyfin/cache"
 
-
 - name: Check the Jellyfin container is created and running
   docker_container:
     name: "jellyfin"
@@ -19,8 +18,16 @@
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
-    ports: "{{ jellyfin_port }}:{{ jellyfin_port }}"
     volumes: 
       - "{{ docker_directory }}/jellyfin/config:/config"
       - "{{ docker_directory }}/jellyfin/cache:/cache"
       - "{{ disk_path }}:/media"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.jellyfin_route.entrypoints": "websecure"
+      "traefik.http.routers.jellyfin_route.rule": "Host(`jellyfin.local`)"
+      "traefik.http.routers.jellyfin_route.service": "jellyfin_service"
+      "traefik.http.routers.jellyfin_route.tls": "true"
+      "traefik.http.services.jellyfin_service.loadbalancer.server.port": "{{ jellyfin_port }}"
+    networks:
+      - name: traefik_public

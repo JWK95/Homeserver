@@ -1,0 +1,98 @@
+---
+- name: Create docker networks
+  docker_network:
+    name: "{{ item }}"
+    internal: false
+  loop:
+    - traefik_public
+    - socket_proxy
+
+- name: Create certs directory
+  file: 
+    path: "{{ certs_dir }}/{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - ca
+    - traefik
+
+- name: Create CA certs
+  shell: |
+      openssl genrsa -out {{ certs_dir }}/ca/rootCA.key 4096
+      openssl req -x509 -new \
+        -nodes \
+        -sha256 \
+        -days 3650 \
+        -key {{ certs_dir }}/ca/rootCA.key \
+        -subj "/C=UK/L=London/O=Homelab Inc./CN=Homelab Root CA" \
+        -out {{ certs_dir }}/ca/rootCA.pem
+
+- name: Create traefik wildcard certs
+  shell: |
+      openssl genrsa -out {{ certs_dir }}/traefik/traefik.key 4096
+      openssl req -new \
+        -key {{ certs_dir }}/traefik/traefik.key \
+        -subj "/C=UK/L=London/O=Homelab Inc./CN=*.local" \
+        -out {{ certs_dir }}/traefik/traefik.csr
+      openssl x509 -req \
+        -sha256 \
+        -days 365 \
+        -CA {{ certs_dir }}/ca/rootCA.pem \
+        -CAkey {{ certs_dir }}/ca/rootCA.key \
+        -CAcreateserial \
+        -in {{ certs_dir }}/traefik/traefik.csr \
+        -out {{ certs_dir }}/traefik/traefik.crt
+
+- name: Run the socket proxy container
+  docker_container:
+    name: "socket_proxy"
+    image: "tecnativa/docker-socket-proxy:latest"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      NETWORKS: "1"
+      SERVICES: "1"
+      CONTAINERS: "1"
+      TASKS: "1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - name: socket_proxy
+
+
+- name: Run the traefik container
+  docker_container:
+    name: traefik
+    image: traefik:v2.6
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    command: |
+      --entrypoints.web.address=:81
+      --entrypoints.websecure.address=:443
+      --entrypoints.web.http.redirections.entryPoint.to=websecure
+      --providers.docker=true
+      --providers.docker.exposedbydefault=false
+      --providers.docker.endpoint=tcp://socket_proxy:2375
+      --providers.docker.network=traefik_public
+      --providers.file.directory=/traefik/config/my_dynamic_conf
+      --log.level=info
+      --log.format=json 
+      --api.dashboard=true
+    labels: 
+      "traefik.enable": "true"
+      "traefik.http.routers.dashboard.rule": "Host(`traefik.local`)"
+      "traefik.http.routers.dashboard.tls": "true"
+      "traefik.http.routers.dashboard.entrypoints": "websecure"
+      "traefik.http.routers.dashboard.service": "api@internal"
+    ports:
+      - 80:81
+      - 443:443
+    volumes:
+      - "{{ certs_dir }}/traefik:/traefik/config/certs:ro"
+    networks:
+      - name: traefik_public
+      - name: socket_proxy

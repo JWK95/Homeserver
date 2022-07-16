@@ -9,10 +9,13 @@ For my server I use a Raspberry Pi 4 Model B with 8GBs of RAM with an attached G
 ## Software
 My server currently runs Raspbian 64-bit, however this playbook should be compatible with any Debian based OS
 
+![Image of Homeserver dashboard](./assets/dashboard.png)
+
 ### Services
 - [Jellyfin](https://jellyfin.org/) - Media Server
 - [Pi-hole](https://pi-hole.net/) - DNS level ad blocker
 - [Homer](https://github.com/bastienwirtz/homer) - Interactive web dashboard
+- [Traefik](https://traefik.io/traefik/) - Reverse Proxy
 
 ### Other
 - [x735 Safe shutdown script](https://github.com/thorkseng/x735-v2.5)

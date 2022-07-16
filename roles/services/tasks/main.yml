@@ -1,4 +1,7 @@
 ---
+- include_tasks: traefik.yml
+  when: install_traefik | bool
+
 - include_tasks: homer.yml
   when: install_homer | bool
 

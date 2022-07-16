@@ -2,6 +2,8 @@
 title: "Pi Dashboard"
 logo: "assets/logo.png"
 
+connectivityCheck: false
+
 header: false
 footer: ""
 
@@ -15,8 +17,8 @@ services:
     items:
     {% for service in services %}
 
-      - name: "{{ service.name }}"
-        logo: "assets/{{ service.name | lower }}.png"
-        url: "{{ service.url }}"
+      - name: "{{ service }}"
+        logo: "assets/{{ service | lower }}.png"
+        url: "https://{{ service }}.local"
  
     {% endfor %}

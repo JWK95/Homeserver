@@ -1,3 +1,5 @@
+install_traefik: true
+
 install_homer: true
 
 install_jellyfin: true
@@ -10,13 +12,17 @@ install_x735: true
 
 jellyfin_port: "8096"
 
+# Traefik 
+
+certs_dir: /opt/certs
+
 # Homer
 
 services:
-  - name: Jellyfin
-    url: "http://{{ local_ip }}:{{ jellyfin_port }}"
-  - name: Pi-hole
-    url: "http://{{ local_ip }}:80/admin"
+  - Homer
+  - Jellyfin
+  - Pi-hole
+  - Traefik
 
 # Jellyfin
 

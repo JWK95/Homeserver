@@ -24,6 +24,14 @@
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
-    ports: "8080:8080"
     volumes: 
       - "{{ docker_directory }}/homer/:/www/assets/"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.homer_route.entrypoints": "websecure"
+      "traefik.http.routers.homer_route.rule": "Host(`homer.local`)"
+      "traefik.http.routers.homer_route.service": "homer_service"
+      "traefik.http.routers.homer_route.tls": "true"
+      "traefik.http.services.homer_service.loadbalancer.server.port": "8080"
+    networks:
+      - name: traefik_public
