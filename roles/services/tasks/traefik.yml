@@ -7,47 +7,28 @@
     - traefik_public
     - socket_proxy
 
-- name: Create certs directory
-  file: 
-    path: "{{ certs_dir }}/{{ item }}"
+- name: Make traefik directories
+  file:
+    path: "{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
     state: directory
     recurse: yes
   loop:
-    - ca
-    - traefik
+    - "{{ docker_directory }}/{{ traefik_name | lower }}"
 
-- name: Create CA certs
-  shell: |
-      openssl genrsa -out {{ certs_dir }}/ca/rootCA.key 4096
-      openssl req -x509 -new \
-        -nodes \
-        -sha256 \
-        -days 3650 \
-        -key {{ certs_dir }}/ca/rootCA.key \
-        -subj "/C=UK/L=London/O=Homelab Inc./CN=Homelab Root CA" \
-        -out {{ certs_dir }}/ca/rootCA.pem
+- name: Create certs directory
+  file: 
+    path: "{{ certs_dir }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
 
-- name: Create traefik wildcard certs
-  shell: |
-      openssl genrsa -out {{ certs_dir }}/traefik/traefik.key 4096
-      openssl req -new \
-        -key {{ certs_dir }}/traefik/traefik.key \
-        -subj "/C=UK/L=London/O=Homelab Inc./CN=*.local" \
-        -out {{ certs_dir }}/traefik/traefik.csr
-      openssl x509 -req \
-        -sha256 \
-        -days 365 \
-        -CA {{ certs_dir }}/ca/rootCA.pem \
-        -CAkey {{ certs_dir }}/ca/rootCA.key \
-        -CAcreateserial \
-        -in {{ certs_dir }}/traefik/traefik.csr \
-        -out {{ certs_dir }}/traefik/traefik.crt
-
-- name: Run the socket proxy container
+- name: Check the socket_proxy container is up and running
   docker_container:
     name: "socket_proxy"
+    hostname: "socket_proxy"
     image: "tecnativa/docker-socket-proxy:latest"
     pull: true
     state: "started"
@@ -62,37 +43,51 @@
     networks:
       - name: socket_proxy
 
-
-- name: Run the traefik container
+- name: Check the Traefik container is up and running
   docker_container:
-    name: traefik
-    image: traefik:v2.6
+    name: "{{ traefik_name }}"
+    hostname: "{{ traefik_name | lower }}"
+    image: "traefik:latest"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
     command: |
-      --entrypoints.web.address=:81
-      --entrypoints.websecure.address=:443
-      --entrypoints.web.http.redirections.entryPoint.to=websecure
       --providers.docker=true
       --providers.docker.exposedbydefault=false
       --providers.docker.endpoint=tcp://socket_proxy:2375
       --providers.docker.network=traefik_public
-      --providers.file.directory=/traefik/config/my_dynamic_conf
+      --api.dashboard=true
+      --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+      --certificatesresolvers.letsencrypt.acme.email={{ certs_email }}
+      --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      --entrypoints.web.address=:{{ traefik_port }}
+      --entrypoints.web.http.redirections.entrypoint.to=websecure
+      --entrypoints.web.http.redirections.entrypoint.scheme=https
+      --entrypoints.websecure.address=:443
+      --entrypoints.websecure.http.tls=true
+      --entrypoints.websecure.http.tls.certResolver=letsencrypt
+      --entrypoints.websecure.http.tls.domains[0].main={{ domain }}
+      --entrypoints.websecure.http.tls.domains[0].sans=*.{{ domain }}
       --log.level=info
       --log.format=json 
-      --api.dashboard=true
     labels: 
       "traefik.enable": "true"
-      "traefik.http.routers.dashboard.rule": "Host(`traefik.local`)"
-      "traefik.http.routers.dashboard.tls": "true"
-      "traefik.http.routers.dashboard.entrypoints": "websecure"
-      "traefik.http.routers.dashboard.service": "api@internal"
+      "traefik.http.routers.traefik.rule": "Host(`{{ traefik_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.traefik.entrypoints": "websecure"
+      "traefik.http.routers.traefik.tls.certResolver": "letsencrypt"
+      "traefik.http.routers.traefik.service": "api@internal"
+      "traefik.http.routers.traefik.middlewares": "strip"
+      "traefik.http.middlewares.strip.stripprefix.prefixes": "/{{ traefik_name | lower }}"
+    env:
+      CLOUDFLARE_EMAIL: "{{ certs_email }}"
+      CLOUDFLARE_DNS_API_TOKEN: "{{ cloudflare_api_token }}"
     ports:
-      - 80:81
+      - "80:{{ traefik_port }}"
       - 443:443
     volumes:
-      - "{{ certs_dir }}/traefik:/traefik/config/certs:ro"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "{{ certs_dir }}:/letsencrypt"
     networks:
       - name: traefik_public
       - name: socket_proxy

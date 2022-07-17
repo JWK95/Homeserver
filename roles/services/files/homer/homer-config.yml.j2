@@ -17,6 +17,6 @@ services:
 
       - name: "{{ service }}"
         logo: "assets/{{ service | lower }}.png"
-        url: "https://{{ service | lower }}.local"
+        url: "https://{{ service | lower }}.{{ domain }}"
  
     {% endfor %}

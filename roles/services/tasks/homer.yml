@@ -1,7 +1,7 @@
 ---
 - name: Make Homer directory
   file:
-    path: "{{ docker_directory}}/homer/"
+    path: "{{ docker_directory}}/{{ homer_name | lower }}/"
     owner: "{{ username }}"
     group: "{{ username }}"
     state: directory
@@ -12,32 +12,32 @@
     src: ../files/homer/homer-config.yml.j2
     owner: "{{ username }}"
     group: "{{ username }}"
-    dest: "{{ docker_directory }}/homer/config.yml"
-    recurse: yes
+    dest: "{{ docker_directory }}/{{ homer_name | lower }}/config.yml"
 
 - name: Copy image assets to Homer directory
   copy: 
-    src: "../files/homer/assets/"
+    src: "../files/{{ homer_name | lower }}/assets/"
     owner: "{{ username }}"
     group: "{{ username }}"
-    dest: "{{ docker_directory }}/homer/"
-    recurse: yes
+    dest: "{{ docker_directory }}/{{ homer_name | lower }}/"
 
 - name: Check the Homer container is created and running
   docker_container:
-    name: "homer"
+    name: "{{ homer_name }}"
+    hostname: "{{ homer_name | lower }}"
     image: "b4bz/homer"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
     volumes: 
-      - "{{ docker_directory }}/homer/:/www/assets/"
+      - "{{ docker_directory }}/{{ homer_name | lower }}/:/www/assets/"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.homer_route.entrypoints": "websecure"
-      "traefik.http.routers.homer_route.rule": "Host(`homer.local`)"
+      "traefik.http.routers.homer_route.rule": "Host(`{{ homer_name | lower }}.{{ domain }}`)"
       "traefik.http.routers.homer_route.service": "homer_service"
       "traefik.http.routers.homer_route.tls": "true"
-      "traefik.http.services.homer_service.loadbalancer.server.port": "8080"
+      "traefik.http.routers.homer_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.homer_service.loadbalancer.server.port": "{{ homer_port }}"
     networks:
       - name: traefik_public

@@ -7,16 +7,19 @@
     state: directory
     recurse: yes
   loop:
-    - "{{ docker_directory }}/pi-hole"
+    - "{{ docker_directory }}/{{ pihole_name | lower }}"
+    - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-pihole"
+    - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-dnsmasq.d"
 
 - name: Copy custom DNS list
   template:
-    src: ../files/pi-hole/hosts.j2
-    dest: "{{ docker_directory }}/pi-hole/hosts"
+    src: ../files/{{ pihole_name | lower }}/hosts.j2
+    dest: "{{ docker_directory }}/{{ pihole_name | lower }}/hosts"
 
 - name: Check the Pi-hole container is up and running
   docker_container:
-    name: "pi-hole"
+    name: "{{ pihole_name }}"
+    hostname: "{{ pihole_name | lower }}"
     image: "pihole/pihole"
     pull: true
     state: "started"
@@ -24,24 +27,26 @@
     env:
       "TZ": "GB"
       "WEBPASSWORD": "{{ pihole_webpassword }}"
-      "PIHOLE_INTERFACE": "eth0"
       "DNSMASQ_LISTENING": "all"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
     volumes:
-      - "{{ docker_directory }}/pi-hole/hosts:/etc/hosts"
+      - "{{ docker_directory }}/{{ pihole_name | lower }}/hosts:/etc/hosts"
+      - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-pihole:/etc/pihole:z"
+      - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-dnsmasq.d:/dnsmasq.d:z"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.pihole_route.entrypoints": "websecure"
-      "traefik.http.routers.pihole_route.rule": "Host(`pi-hole.local`)"
+      "traefik.http.routers.pihole_route.rule": "Host(`{{ pihole_name | lower }}.{{ domain }}`)"
       "traefik.http.routers.pihole_route.service": "pihole_service"
       "traefik.http.routers.pihole_route.tls": "true"
-      "traefik.http.routers.pihole_route.middlewares": "add-context"
-      "traefik.http.services.pihole_service.loadbalancer.server.port": "80"
+      "traefik.http.routers.pihole_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.pihole_service.loadbalancer.server.port": "{{ pihole_port }}"
       # Redirect to /admin
-      "traefik.http.middlewares.add-context.redirectregex.regex": "^https:\\/\\/([^\\/]+)\\/?$$"
-      "traefik.http.middlewares.add-context.redirectregex.replacement": "https://pi-hole.local/admin"
+      "traefik.http.routers.pihole_route.middlewares": "pihole_context"
+      "traefik.http.middlewares.pihole_context.redirectregex.regex": "^https:\\/\\/([^\\/]+)\\/?$$"
+      "traefik.http.middlewares.pihole_context.redirectregex.replacement": "https://{{ pihole_name | lower }}.{{ domain }}/admin"
     networks:
       - name: traefik_public  

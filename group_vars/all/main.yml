@@ -10,15 +10,21 @@ configure_samba: true
 
 username: pi
 
-docker_directory: /opt/docker/data
+docker_directory: /opt/docker
 
 disk_path: /mnt/SSD
-
-local_ip: "127.0.0.1"
 
 pihole_webpassword: "SuperSecurePiHolePassword"
 
 samba_password: "SuperSecureSambaPassword"
+
+# Certbot
+
+certs_email: "YOUR_EMAIL_ADDRESS"
+
+cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
+
+domain: "YOUR_DOMAIN"
 
 # Samba
 

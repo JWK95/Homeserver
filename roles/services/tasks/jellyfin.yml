@@ -7,27 +7,29 @@
     state: directory
     recurse: yes
   loop:
-  - "{{ docker_directory }}/jellyfin"
-  - "{{ docker_directory }}/jellyfin/config"
-  - "{{ docker_directory }}/jellyfin/cache"
+  - "{{ docker_directory }}/{{ jellyfin_name | lower }}"
+  - "{{ docker_directory }}/{{ jellyfin_name | lower }}/config"
+  - "{{ docker_directory }}/{{ jellyfin_name | lower }}/cache"
 
 - name: Check the Jellyfin container is created and running
   docker_container:
-    name: "jellyfin"
+    name: "{{ jellyfin_name }}"
+    hostname: "{{ jellyfin_name | lower }}"
     image: "jellyfin/jellyfin"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
     volumes: 
-      - "{{ docker_directory }}/jellyfin/config:/config"
-      - "{{ docker_directory }}/jellyfin/cache:/cache"
+      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/config:/config"
+      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/cache:/cache"
       - "{{ disk_path }}:/media"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.jellyfin_route.entrypoints": "websecure"
-      "traefik.http.routers.jellyfin_route.rule": "Host(`jellyfin.local`)"
+      "traefik.http.routers.jellyfin_route.rule": "Host(`{{ jellyfin_name | lower }}.{{ domain }}`)"
       "traefik.http.routers.jellyfin_route.service": "jellyfin_service"
       "traefik.http.routers.jellyfin_route.tls": "true"
+      "traefik.http.routers.jellyfin_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.jellyfin_service.loadbalancer.server.port": "{{ jellyfin_port }}"
     networks:
       - name: traefik_public

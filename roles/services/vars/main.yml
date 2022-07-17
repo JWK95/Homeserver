@@ -8,25 +8,36 @@ install_pihole: true
 
 install_x735: true
 
-# Shared 
+# Shared
 
-jellyfin_port: "8096"
+traefik_name: Traefik
+homer_name: Homer
+jellyfin_name: Jellyfin
+pihole_name: Pi-hole
 
 # Traefik 
+
+traefik_port: "81"
 
 certs_dir: /opt/certs
 
 # Homer
 
+homer_port: "8080"
+
 services:
-  - Homer
-  - Jellyfin
-  - Pi-hole
-  - Traefik
+  - "{{ traefik_name }}"
+  - "{{ homer_name }}"
+  - "{{ jellyfin_name }}"
+  - "{{ pihole_name }}"
 
 # Jellyfin
 
+jellyfin_port: "8096"
+
 # Pi-hole
+
+pihole_port: "80"
 
 # x735
 

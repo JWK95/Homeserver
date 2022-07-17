@@ -39,9 +39,11 @@ vim host_vars/HOSTNAME/main.yml
 
 Some notable values to change are: 
 ```
-local_ip: "127.0.0.1"
 pihole_webpassword: "SuperSecurePiHolePassword"
 samba_password: "SuperSecureSambaPassword"
+certs_email: "YOUR_EMAIL_ADDRESS"
+cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
+domain: "YOUR_DOMAIN"
 ```
 
 Install the dependencies:
