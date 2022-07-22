@@ -11,5 +11,20 @@
 - include_tasks: pi-hole.yml
   when: install_pihole | bool
 
+- include_tasks: qbittorent.yml
+  when: install_qbittorent | bool
+
+- include_tasks: sonarr.yml
+  when: install_sonarr | bool
+
+- include_tasks: jackett.yml
+  when: install_jackett | bool
+
+- include_tasks: radarr.yml
+  when: install_radarr | bool
+
+- include_tasks: bazarr.yml
+  when: install_bazarr | bool
+  
 - include_tasks: x735.yml 
   when: install_x735 | bool

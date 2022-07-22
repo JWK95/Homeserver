@@ -18,13 +18,13 @@ pihole_webpassword: "SuperSecurePiHolePassword"
 
 samba_password: "SuperSecureSambaPassword"
 
-# Certbot
-
 certs_email: "YOUR_EMAIL_ADDRESS"
 
 cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
 
 domain: "YOUR_DOMAIN"
+
+qbittorent_password: "SuperSecureQBittorentPassword"
 
 # Samba
 

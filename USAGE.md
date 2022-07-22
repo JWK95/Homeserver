@@ -37,6 +37,12 @@ mkdir -p host_vars/HOSTNAME
 vim host_vars/HOSTNAME/main.yml
 ```
 
+You may wish to encrypt this file, this can be done using ansible vault
+```
+ansible-vault encrypt host_vars/HOSTNAME/main.yml
+```
+If you do encrpyt the variables file, ensure to pass the "--ask-vault-password" when running the playbook
+
 Some notable values to change are: 
 ```
 pihole_webpassword: "SuperSecurePiHolePassword"
@@ -44,6 +50,7 @@ samba_password: "SuperSecureSambaPassword"
 certs_email: "YOUR_EMAIL_ADDRESS"
 cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
 domain: "YOUR_DOMAIN"
+qbittorent_password: "SuperSecureQBittorentPassword"
 ```
 
 Install the dependencies:

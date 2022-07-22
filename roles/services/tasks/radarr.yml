@@ -1,0 +1,38 @@
+---
+- name: Make Radarr directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ radarr_name | lower }}"
+    - "{{ docker_directory }}/{{ radarr_name | lower }}/config"
+
+- name: Check the Radarr container is created and running
+  docker_container:
+    name: "{{ radarr_name }}"
+    hostname: "{{ radarr_name | lower }}"
+    image: "lscr.io/linuxserver/radarr"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      "TZ": "Europe/London"
+      "PUID": "1000"
+      "PGID": "1000"
+    volumes: 
+      - "{{ disk_path }}:/media"
+      - "{{ docker_directory }}/{{ radarr_name | lower }}/config:/config"
+      - "{{ docker_directory }}/{{ qbittorent_name | lower }}/downloads:/downloads"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.radarr_route.entrypoints": "websecure"
+      "traefik.http.routers.radarr_route.rule": "Host(`{{ radarr_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.radarr_route.service": "radarr_service"
+      "traefik.http.routers.radarr_route.tls": "true"
+      "traefik.http.routers.radarr_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.radarr_service.loadbalancer.server.port": "{{ radarr_port }}"
+    networks:
+      - name: traefik_public

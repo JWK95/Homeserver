@@ -12,11 +12,19 @@ My server currently runs Raspbian 64-bit, however this playbook should be compat
 ![Image of Homeserver dashboard](./assets/dashboard.png)
 
 ### Services
+- [Traefik](https://traefik.io/traefik/) - Reverse Proxy
+- [Homer](https://github.com/bastienwirtz/homer) - Interactive web dashboard
 - [Jellyfin](https://jellyfin.org/) - Media Server
 - [Pi-hole](https://pi-hole.net/) - DNS level ad blocker
-- [Homer](https://github.com/bastienwirtz/homer) - Interactive web dashboard
-- [Traefik](https://traefik.io/traefik/) - Reverse Proxy
+- [qBittorent](https://www.qbittorrent.org/) - Torrent client
+- [Sonarr](https://sonarr.tv/) - TV Series Manager
+- [Jackett](https://github.com/Jackett/Jackett) - Torrent tracker
+- [Radarr](https://radarr.video/) - Film Series manager
+- [Bazarr](https://www.bazarr.media/) - Subtitles manager
 
 ### Other
 - [x735 Safe shutdown script](https://github.com/thorkseng/x735-v2.5)
 - [Samba](https://www.samba.org/samba/)
+
+### Getting Started
+See [USAGE.md](./USAGE.md)

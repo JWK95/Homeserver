@@ -1,0 +1,38 @@
+---
+- name: Make Jackett directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ jackett_name | lower }}"
+    - "{{ docker_directory }}/{{ jackett_name | lower }}/config"
+
+- name: Check the Jackett container is created and running
+  docker_container:
+    name: "{{ jackett_name }}"
+    hostname: "{{ jackett_name | lower }}"
+    image: "lscr.io/linuxserver/jackett"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      "TZ": "Europe/London"
+      "PUID": "1000"
+      "PGID": "1000"
+    volumes: 
+      - "{{ disk_path }}:/media"
+      - "{{ docker_directory }}/{{ jackett_name | lower }}/config:/config"
+      - "{{ docker_directory }}/{{ qbittorent_name | lower }}/downloads:/downloads"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.jackett_route.entrypoints": "websecure"
+      "traefik.http.routers.jackett_route.rule": "Host(`{{ jackett_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.jackett_route.service": "jackett_service"
+      "traefik.http.routers.jackett_route.tls": "true"
+      "traefik.http.routers.jackett_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.jackett_service.loadbalancer.server.port": "{{ jackett_port }}"
+    networks:
+      - name: traefik_public

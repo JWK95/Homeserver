@@ -32,6 +32,7 @@
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
+      - "81:{{ pihole_port }}/tcp"
     volumes:
       - "{{ docker_directory }}/{{ pihole_name | lower }}/hosts:/etc/hosts"
       - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-pihole:/etc/pihole:z"

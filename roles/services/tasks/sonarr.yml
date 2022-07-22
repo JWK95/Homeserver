@@ -1,0 +1,38 @@
+---
+- name: Make Sonarr directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ sonarr_name | lower }}"
+    - "{{ docker_directory }}/{{ sonarr_name | lower }}/config"
+
+- name: Check the Sonarr container is created and running
+  docker_container:
+    name: "{{ sonarr_name }}"
+    hostname: "{{ sonarr_name | lower }}"
+    image: "lscr.io/linuxserver/sonarr"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      "TZ": "Europe/London"
+      "PUID": "1000"
+      "PGID": "1000"
+    volumes: 
+      - "{{ disk_path }}:/media"
+      - "{{ docker_directory }}/{{ sonarr_name | lower }}/config:/config"
+      - "{{ docker_directory }}/{{ qbittorent_name | lower }}/downloads:/downloads"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.sonarr_route.entrypoints": "websecure"
+      "traefik.http.routers.sonarr_route.rule": "Host(`{{ sonarr_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.sonarr_route.service": "sonarr_service"
+      "traefik.http.routers.sonarr_route.tls": "true"
+      "traefik.http.routers.sonarr_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.sonarr_service.loadbalancer.server.port": "{{ sonarr_port }}"
+    networks:
+      - name: traefik_public
