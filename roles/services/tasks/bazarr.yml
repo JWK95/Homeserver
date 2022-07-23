@@ -34,4 +34,4 @@
       "traefik.http.routers.bazarr_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.bazarr_service.loadbalancer.server.port": "{{ bazarr_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

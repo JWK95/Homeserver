@@ -1,3 +1,3 @@
 {% for service in services %}
-192.168.0.100 {{ service | lower }}.{{ domain }}
+192.168.0.100 {{ service | replace(' ', '-') | lower }}.{{ domain }}
 {% endfor %}

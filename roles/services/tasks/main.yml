@@ -25,6 +25,9 @@
 
 - include_tasks: bazarr.yml
   when: install_bazarr | bool
+
+- include_tasks: uptime-kuma.yml
+  when: install_uptime_kuma | bool
   
 - include_tasks: x735.yml 
   when: install_x735 | bool

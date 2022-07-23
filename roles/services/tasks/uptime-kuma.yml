@@ -1,0 +1,31 @@
+---
+- name: Make Uptime Kuma directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ uptime_kuma_name | replace(' ', '-') | lower }}"
+
+- name: Check the Uptime Kuma container is created and running
+  docker_container:
+    name: "{{ uptime_kuma_name | replace(' ', '-') }}"
+    hostname: "{{ uptime_kuma_name | lower }}"
+    image: "louislam/uptime-kuma"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    volumes: 
+      - "{{ docker_directory }}/{{ uptime_kuma_name | replace(' ', '-') | lower }}:/app/data"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.uptime_kuma_route.entrypoints": "websecure"
+      "traefik.http.routers.uptime_kuma_route.rule": "Host(`{{ uptime_kuma_name | replace(' ', '-') | lower }}.{{ domain }}`)"
+      "traefik.http.routers.uptime_kuma_route.service": "uptime_kuma_service"
+      "traefik.http.routers.uptime_kuma_route.tls": "true"
+      "traefik.http.routers.uptime_kuma_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.uptime_kuma_service.loadbalancer.server.port": "{{ uptime_kuma_port }}"
+    networks:
+      - name: "{{ docker_network_name }}"

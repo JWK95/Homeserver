@@ -16,7 +16,7 @@ services:
     {% for service in services %}
 
       - name: "{{ service }}"
-        logo: "assets/{{ service | lower }}.png"
-        url: "https://{{ service | lower }}.{{ domain }}"
+        logo: "assets/{{ service | replace(' ', '-') | lower }}.png"
+        url: "https://{{ service | replace(' ', '-') | lower }}.{{ domain }}"
  
     {% endfor %}

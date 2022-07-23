@@ -37,4 +37,4 @@
       "traefik.http.routers.qbittorrent_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.qbittorrent_service.loadbalancer.server.port": "{{ qbittorrent_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

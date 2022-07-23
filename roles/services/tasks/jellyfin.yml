@@ -31,4 +31,4 @@
       "traefik.http.routers.jellyfin_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.jellyfin_service.loadbalancer.server.port": "{{ jellyfin_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

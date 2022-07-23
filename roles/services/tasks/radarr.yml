@@ -34,4 +34,4 @@
       "traefik.http.routers.radarr_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.radarr_service.loadbalancer.server.port": "{{ radarr_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

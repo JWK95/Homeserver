@@ -34,4 +34,4 @@
       "traefik.http.routers.sonarr_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.sonarr_service.loadbalancer.server.port": "{{ sonarr_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

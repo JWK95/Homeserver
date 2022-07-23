@@ -49,4 +49,4 @@
       "traefik.http.middlewares.pihole_context.redirectregex.regex": "^https:\\/\\/([^\\/]+)\\/?$$"
       "traefik.http.middlewares.pihole_context.redirectregex.replacement": "https://{{ pihole_name | lower }}.{{ domain }}/admin"
     networks:
-      - name: traefik_public  
+      - name: "{{ docker_network_name }}"

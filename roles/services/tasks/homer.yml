@@ -40,4 +40,4 @@
       "traefik.http.routers.homer_route.tls.certResolver": "letsencrypt"
       "traefik.http.services.homer_service.loadbalancer.server.port": "{{ homer_port }}"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"

@@ -16,11 +16,12 @@ My server currently runs Raspbian 64-bit, however this playbook should be compat
 - [Homer](https://github.com/bastienwirtz/homer) - Interactive web dashboard
 - [Jellyfin](https://jellyfin.org/) - Media Server
 - [Pi-hole](https://pi-hole.net/) - DNS level ad blocker
-- [qBittorent](https://www.qbittorrent.org/) - Torrent client
+- [qBittorrent](https://www.qbittorrent.org/) - Torrent client
 - [Sonarr](https://sonarr.tv/) - TV Series Manager
 - [Jackett](https://github.com/Jackett/Jackett) - Torrent tracker
 - [Radarr](https://radarr.video/) - Film Series manager
 - [Bazarr](https://www.bazarr.media/) - Subtitles manager
+- [Uptime Kuma](https://github.com/louislam/uptime-kuma) - Uptime monitor
 
 ### Other
 - [x735 Safe shutdown script](https://github.com/thorkseng/x735-v2.5)

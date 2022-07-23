@@ -4,7 +4,7 @@
     name: "{{ item }}"
     internal: false
   loop:
-    - traefik_public
+    - "{{ docker_network_name }}"
     - socket_proxy
 
 - name: Create certs directory
@@ -79,5 +79,5 @@
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - "{{ certs_dir }}:/letsencrypt"
     networks:
-      - name: traefik_public
+      - name: "{{ docker_network_name }}"
       - name: socket_proxy

@@ -7,6 +7,7 @@ install_sonarr: true
 install_jackett: true
 install_radarr: true
 install_bazarr: true
+install_uptime_kuma: true
 install_x735: true
 
 # Shared
@@ -20,16 +21,7 @@ sonarr_name: Sonarr
 jackett_name: Jackett
 radarr_name: Radarr
 bazarr_name: Bazarr
-
-# Traefik 
-
-traefik_port: "81"
-
-certs_dir: /opt/certs
-
-# Homer
-
-homer_port: "8080"
+uptime_kuma_name: Uptime Kuma
 
 services:
   - "{{ traefik_name }}"
@@ -41,6 +33,19 @@ services:
   - "{{ jackett_name }}"
   - "{{ radarr_name }}"
   - "{{ bazarr_name }}"
+  - "{{ uptime_kuma_name }}"
+
+docker_network_name: "{{ domain }}"
+
+# Traefik 
+
+traefik_port: "81"
+
+certs_dir: /opt/certs
+
+# Homer
+
+homer_port: "8080"
 
 # Jellyfin
 
@@ -69,6 +74,10 @@ radarr_port: "7878"
 # bazarr
 
 bazarr_port: "6767"
+
+# uptime kuma
+
+uptime_kuma_port: "3001"
 
 # x735
 
