@@ -1,0 +1,40 @@
+---
+- name: Make qBittorrent directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ qbittorrent_name | lower }}/config"
+
+- name: Check the qBittorrent container is created and running
+  docker_container:
+    name: "{{ qbittorrent_name }}"
+    hostname: "{{ qbittorrent_name | lower }}"
+    image: "lscr.io/linuxserver/qbittorrent"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    env:
+      "TZ": "Europe/London"
+      "WEBUI_PORT": "{{ qbittorrent_port }}"
+      "PASSWORD": "{{ qbittorrent_password }}"
+      "PUID": "1000"
+      "PGID": "1000"
+    ports:
+      - 6881:6881
+    volumes: 
+      - "{{ disk_path }}/downloads:/downloads"
+      - "{{ docker_directory }}/{{ qbittorrent_name | lower }}/config:/config"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.qbittorrent_route.entrypoints": "websecure"
+      "traefik.http.routers.qbittorrent_route.rule": "Host(`{{ qbittorrent_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.qbittorrent_route.service": "qbittorrent_service"
+      "traefik.http.routers.qbittorrent_route.tls": "true"
+      "traefik.http.routers.qbittorrent_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.qbittorrent_service.loadbalancer.server.port": "{{ qbittorrent_port }}"
+    networks:
+      - name: traefik_public

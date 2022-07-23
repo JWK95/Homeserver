@@ -2,7 +2,7 @@ install_traefik: true
 install_homer: true
 install_jellyfin: true
 install_pihole: true
-install_qbittorent: true
+install_qbittorrent: true
 install_sonarr: true
 install_jackett: true
 install_radarr: true
@@ -15,7 +15,7 @@ traefik_name: Traefik
 homer_name: Homer
 jellyfin_name: Jellyfin
 pihole_name: Pi-hole
-qbittorent_name: qBittorent
+qbittorrent_name: qBittorrent
 sonarr_name: Sonarr
 jackett_name: Jackett
 radarr_name: Radarr
@@ -36,7 +36,7 @@ services:
   - "{{ homer_name }}"
   - "{{ jellyfin_name }}"
   - "{{ pihole_name }}"
-  - "{{ qbittorent_name }}"
+  - "{{ qbittorrent_name }}"
   - "{{ sonarr_name }}"
   - "{{ jackett_name }}"
   - "{{ radarr_name }}"
@@ -52,7 +52,7 @@ pihole_port: "80"
 
 # qBittorent
 
-qbittorent_port: "8000"
+qbittorrent_port: "8000"
 
 # sonarr
 

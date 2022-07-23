@@ -7,16 +7,6 @@
     - traefik_public
     - socket_proxy
 
-- name: Make traefik directories
-  file:
-    path: "{{ item }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    state: directory
-    recurse: yes
-  loop:
-    - "{{ docker_directory }}/{{ traefik_name | lower }}"
-
 - name: Create certs directory
   file: 
     path: "{{ certs_dir }}"

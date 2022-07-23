@@ -11,8 +11,8 @@
 - include_tasks: pi-hole.yml
   when: install_pihole | bool
 
-- include_tasks: qbittorent.yml
-  when: install_qbittorent | bool
+- include_tasks: qbittorrent.yml
+  when: install_qbittorrent | bool
 
 - include_tasks: sonarr.yml
   when: install_sonarr | bool

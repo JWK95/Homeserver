@@ -7,7 +7,6 @@
     state: directory
     recurse: yes
   loop:
-  - "{{ docker_directory }}/{{ jellyfin_name | lower }}"
   - "{{ docker_directory }}/{{ jellyfin_name | lower }}/config"
   - "{{ docker_directory }}/{{ jellyfin_name | lower }}/cache"
 
@@ -20,9 +19,9 @@
     state: "started"
     restart_policy: "unless-stopped"
     volumes: 
-      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/config:/config"
-      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/cache:/cache"
       - "{{ disk_path }}:/media"
+      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/cache:/cache"
+      - "{{ docker_directory }}/{{ jellyfin_name | lower }}/config:/config"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.jellyfin_route.entrypoints": "websecure"

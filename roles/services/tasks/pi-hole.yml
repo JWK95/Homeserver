@@ -7,7 +7,6 @@
     state: directory
     recurse: yes
   loop:
-    - "{{ docker_directory }}/{{ pihole_name | lower }}"
     - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-pihole"
     - "{{ docker_directory }}/{{ pihole_name | lower }}/etc-dnsmasq.d"
 

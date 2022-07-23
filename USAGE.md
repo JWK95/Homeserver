@@ -50,7 +50,7 @@ samba_password: "SuperSecureSambaPassword"
 certs_email: "YOUR_EMAIL_ADDRESS"
 cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
 domain: "YOUR_DOMAIN"
-qbittorent_password: "SuperSecureQBittorentPassword"
+qbittorrent_password: "SuperSecureQBittorentPassword"
 ```
 
 Install the dependencies:

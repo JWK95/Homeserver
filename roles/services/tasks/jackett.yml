@@ -7,7 +7,6 @@
     state: directory
     recurse: yes
   loop:
-    - "{{ docker_directory }}/{{ jackett_name | lower }}"
     - "{{ docker_directory }}/{{ jackett_name | lower }}/config"
 
 - name: Check the Jackett container is created and running
@@ -24,8 +23,8 @@
       "PGID": "1000"
     volumes: 
       - "{{ disk_path }}:/media"
+      - "{{ disk_path }}/downloads:/downloads"
       - "{{ docker_directory }}/{{ jackett_name | lower }}/config:/config"
-      - "{{ docker_directory }}/{{ qbittorent_name | lower }}/downloads:/downloads"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.jackett_route.entrypoints": "websecure"

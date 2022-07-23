@@ -7,7 +7,6 @@
     state: directory
     recurse: yes
   loop:
-    - "{{ docker_directory }}/{{ bazarr_name | lower }}"
     - "{{ docker_directory }}/{{ bazarr_name | lower }}/config"
 
 - name: Check the Bazarr container is created and running
@@ -25,7 +24,7 @@
     volumes: 
       - "{{ disk_path }}:/media"
       - "{{ docker_directory }}/{{ bazarr_name | lower }}/config:/config"
-      - "{{ docker_directory }}/{{ qbittorent_name | lower }}/downloads:/downloads"
+      - "{{ docker_directory }}/{{ qbittorrent_name | lower }}/downloads:/downloads"
     labels:
       "traefik.enable": "true"
       "traefik.http.routers.bazarr_route.entrypoints": "websecure"

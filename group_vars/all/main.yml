@@ -24,7 +24,7 @@ cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
 
 domain: "YOUR_DOMAIN"
 
-qbittorent_password: "SuperSecureQBittorentPassword"
+qbittorrent_password: "SuperSecureQBittorentPassword"
 
 # Samba
 

@@ -15,11 +15,15 @@
 
 - name: Create disk directory
   file:
-    path: "{{ disk_path }}"
+    path: "{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
     state: directory
     recurse: yes
+  loop:
+    - "{{ disk_path }}/TV"
+    - "{{ disk_path }}/Movies"
+    - "{{ disk_path }}/downloads"
 
 - name: Mount disk
   mount:
