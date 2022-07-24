@@ -8,6 +8,8 @@ install_jackett: true
 install_radarr: true
 install_bazarr: true
 install_uptime_kuma: true
+install_prometheus: true
+install_grafana: true
 install_x735: true
 
 # Shared
@@ -22,6 +24,8 @@ jackett_name: Jackett
 radarr_name: Radarr
 bazarr_name: Bazarr
 uptime_kuma_name: Uptime Kuma
+prometheus_name: Prometheus
+grafana_name: Grafana
 
 services:
   - "{{ traefik_name }}"
@@ -34,13 +38,14 @@ services:
   - "{{ radarr_name }}"
   - "{{ bazarr_name }}"
   - "{{ uptime_kuma_name }}"
+  - "{{ prometheus_name }}"
+  - "{{ grafana_name }}"
 
 docker_network_name: "{{ domain }}"
 
 # Traefik 
 
 traefik_port: "81"
-
 certs_dir: /opt/certs
 
 # Homer
@@ -59,25 +64,36 @@ pihole_port: "80"
 
 qbittorrent_port: "8000"
 
-# sonarr
+# Sonarr
 
 sonarr_port: "8989"
 
-# jackett
+# Jackett
 
 jackett_port: "9117"
 
-# radarr
+# Radarr
 
 radarr_port: "7878"
 
-# bazarr
+# Bazarr
 
 bazarr_port: "6767"
 
-# uptime kuma
+# Uptime Kuma
 
 uptime_kuma_port: "3001"
+
+# Prometheus
+
+node_exporter_name: node_exporter
+
+prometheus_port: "9090"
+node_exporter_port: "9100"
+
+# Grafana
+
+grafana_port: "3000"
 
 # x735
 

@@ -1,7 +1,5 @@
 install_packages: true
-
 install_docker: true
-
 configure_disk: true
 
 packages:
@@ -20,9 +18,6 @@ docker_packages:
 # Disk management
 
 disk: /dev/sda
-
 disk_name: /dev/sda1
-
 disk_fstype: ext4
-
 format_disk: false

@@ -1,29 +1,19 @@
 # Don't modify any vars files directly, instead overwrite them using host_vars
 
 run_bootstrap: true
-
 install_services: true
-
 configure_samba: true
 
 # Shared 
 
 username: pi
-
 docker_directory: /opt/docker
-
 disk_path: /mnt/SSD
-
 pihole_webpassword: "SuperSecurePiHolePassword"
-
 samba_password: "SuperSecureSambaPassword"
-
 certs_email: "YOUR_EMAIL_ADDRESS"
-
 cloudflare_api_token: "YOUR_CLOUDFLARE_TOKEN"
-
 domain: "YOUR_DOMAIN"
-
 qbittorrent_password: "SuperSecureQBittorentPassword"
 
 # Samba

@@ -1,0 +1,19 @@
+---
+- name: Check the Grafana container is created and running
+  docker_container:
+    name: "{{ grafana_name }}"
+    hostname: "{{ grafana_name | lower }}"
+    image: "grafana/grafana-oss"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.grafana_route.entrypoints": "websecure"
+      "traefik.http.routers.grafana_route.rule": "Host(`{{ grafana_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.grafana_route.service": "grafana_service"
+      "traefik.http.routers.grafana_route.tls": "true"
+      "traefik.http.routers.grafana_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.grafana_service.loadbalancer.server.port": "{{ grafana_port }}"
+    networks:
+      - name: "{{ docker_network_name }}"

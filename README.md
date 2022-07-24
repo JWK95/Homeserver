@@ -22,6 +22,8 @@ My server currently runs Raspbian 64-bit, however this playbook should be compat
 - [Radarr](https://radarr.video/) - Film Series manager
 - [Bazarr](https://www.bazarr.media/) - Subtitles manager
 - [Uptime Kuma](https://github.com/louislam/uptime-kuma) - Uptime monitor
+- [Prometheus](https://grafana.com/oss/prometheus/) - Systems monitor
+- [Grafana](https://grafana.com/) - Metric visualization
 
 ### Other
 - [x735 Safe shutdown script](https://github.com/thorkseng/x735-v2.5)

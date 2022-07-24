@@ -1,0 +1,52 @@
+---
+- name: Make Prometheus directory
+  file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ docker_directory }}/{{ prometheus_name | lower }}/config"
+
+- name: Copy Prometheus config
+  template:
+    src: ../files/{{ prometheus_name | lower }}/prometheus-config.yml.j2
+    dest: "{{ docker_directory }}/{{ prometheus_name | lower }}/config/prometheus.yml"
+
+- name: Check the node_exporter container is created and running
+  docker_container:
+    name: "{{ node_exporter_name }}"
+    hostname: "{{ node_exporter_name | lower }}"
+    image: "prom/node-exporter"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    command: |
+      --path.rootfs=/host
+    pid_mode: host
+    volumes:
+      - "/:/host:ro,rslave"
+    networks:
+      - name: "{{ docker_network_name }}"
+
+- name: Check the Prometheus container is created and running
+  docker_container:
+    name: "{{ prometheus_name }}"
+    hostname: "{{ prometheus_name | lower }}"
+    image: "prom/prometheus"
+    pull: true
+    state: "started"
+    restart_policy: "unless-stopped"
+    volumes: 
+      - "{{ docker_directory }}/{{ prometheus_name | lower }}/config:/etc/prometheus"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.prometheus_route.entrypoints": "websecure"
+      "traefik.http.routers.prometheus_route.rule": "Host(`{{ prometheus_name | lower }}.{{ domain }}`)"
+      "traefik.http.routers.prometheus_route.service": "prometheus_service"
+      "traefik.http.routers.prometheus_route.tls": "true"
+      "traefik.http.routers.prometheus_route.tls.certResolver": "letsencrypt"
+      "traefik.http.services.prometheus_service.loadbalancer.server.port": "{{ prometheus_port }}"
+    networks:
+      - name: "{{ docker_network_name }}"

@@ -19,7 +19,7 @@
   docker_container:
     name: "socket_proxy"
     hostname: "socket_proxy"
-    image: "tecnativa/docker-socket-proxy:latest"
+    image: "tecnativa/docker-socket-proxy"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"
@@ -37,7 +37,7 @@
   docker_container:
     name: "{{ traefik_name }}"
     hostname: "{{ traefik_name | lower }}"
-    image: "traefik:latest"
+    image: "traefik"
     pull: true
     state: "started"
     restart_policy: "unless-stopped"

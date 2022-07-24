@@ -41,7 +41,7 @@ You may wish to encrypt this file, this can be done using ansible vault
 ```
 ansible-vault encrypt host_vars/HOSTNAME/main.yml
 ```
-If you do encrpyt the variables file, ensure to pass the "--ask-vault-password" when running the playbook
+If you do encrypt the variables file, ensure to pass the "--ask-vault-password" when running the playbook
 
 Some notable values to change are: 
 ```
